@@ -133,7 +133,7 @@ export default function Grafico(props) {
                             <ReactApexChart options={new Options('#FECC00')} series={dataorp} type="area" height={400} />
                         </div>
                 </div>
-                {/* <div id="wrapper">
+                <div id="wrapper">
                 <h3>Oxigênio Dissolvido (O.D)</h3>
                         <div id="chart-small">
                             <ReactApexChart options={new Options('#FECC00')} series={dataoxigenio} type="area" height={400} />
@@ -186,7 +186,7 @@ export default function Grafico(props) {
                         <div id="chart-small">
                             <ReactApexChart options={new Options('#77CCEE')} series={datapotencia} type="area" height={400} />
                         </div>
-                </div> */}
+                </div>
             </div>
         </div>
     )
