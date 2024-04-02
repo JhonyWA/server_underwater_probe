@@ -9,61 +9,74 @@ const dataController = {
         let topico = null
 
         switch (data.type) {
-            case '/ph/val':
+            case '/ph/val/':
                 topico = 'ph'
                 break;
 
-            case '/orp/val':
+            case '/orp/val/':
                 topico = 'orp'
                 break;
 
-            case '/do/val':
+            case '/do/val/':
                 topico = 'oxigenio'
                 break;
 
-            case '/rtd/val':
+            case '/rtd/val/':
                 topico = 'temperatura'
                 break;
 
-            case '/ec/val':
+            case '/ec/val/sal/':
+                topico = 'salinidade'
+                break;
+
+            case '/ec/val/con/':
                 topico = 'condutividade'
                 break;
 
-            case '/ntu/val/l':
+            case '/ec/val/tds/':
+                topico = 'total_solidos_dissolvidos'
+                break;
+
+            case '/ec/val/gvt/':
+                topico = 'gravidade_esp'
+                break;
+
+            case '/ntu/l/':
                 topico = 'turbidez_l'
                 break;
 
-            case '/ntu/val/h':
+            case '/ntu/h/':
                 topico = 'turbidez_h'
                 break;
 
-            case '/em/ishunt':
-                topico = 'energia_c'
+            case '/em/ishunt/':
+                topico = 'energia_ishunt'
                 break;
 
-            case '/em/vshunt':
-                topico = 'energia_t_s'
+            case '/em/vshunt/':
+                topico = 'energia_vshunt'
                 break;
 
-            case '/em/vbus':
-                topico = 'energia_t_b'
+            case '/em/vbus/':
+                topico = 'energia_vbus'
                 break;
 
-            case '/em/power':
-                topico = 'potencia'
+            case '/em/power/':
+                topico = 'energia_watts'
                 break;
 
             default:
                 topico = null
         }
 
-        if(topico === null){// é configuração
-            return 
+        if (topico === null) {// é configuração
+            return
         }
 
         try {
-            let objetdata = new Data({type: topico, value: data.value})
-
+            const datenew = new Date()
+            let objetdata = new Data({ type: topico, value: data.value, date: datenew})
+            //console.log(objetdata);
             let savedData = await objetdata.save()
             //console.log(savedData);
 

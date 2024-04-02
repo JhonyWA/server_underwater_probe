@@ -27,6 +27,8 @@ mongoose.connect(process.env.MONGO_CONNECTION_URL)
 const client = mqtt.connect(process.env.IPBroker, {
   protocolVersion: 5, // Especificar a versão do protocolo MQTT v5
   connectTimeout: 10000,
+  username: process.env.Broker_user, // Adicione seu nome de usuário MQTT aqui
+  password: process.env.Broker_password, // Adicione sua senha MQTT aqui
 });
 
 let isConnected = false;
@@ -63,13 +65,28 @@ client.on('connect', function () {
     });
   }
 
-  subscribe('/ph/#')
-  subscribe('/orp/#')
-  subscribe('/do/#')
-  subscribe('/rtd/#')
-  subscribe('/ec/#')
-  subscribe('/ntu/#')
-  subscribe('/em/#')
+  // Não queremos nos inscrever em todos os tópicos, somente nos que enviam os dados para preencher os gráficos.
+  // subscribe('/ph/#')
+  // subscribe('/orp/#')
+  // subscribe('/do/#')
+  // subscribe('/rtd/#')
+  // subscribe('/ec/#')
+  // subscribe('/ntu/#')
+  // subscribe('/em/#')
+  subscribe ('/ntu/l/')
+  subscribe ('/ntu/h/')
+  subscribe ('/rtd/val/')
+  subscribe ('/orp/val/')
+  subscribe ('/ph/val/')
+  subscribe ('/do/val/')
+  subscribe ('/ec/val/sal/')
+  subscribe ('/ec/val/con/')
+  subscribe ('/ec/val/tds/')
+  subscribe ('/ec/val/gvt/')
+  subscribe ('/em/ishunt/')
+  subscribe ('/em/vshunt/')
+  subscribe ('/em/vbus/')
+  subscribe ('/em/power/')
 });
 
 // Evento disparado quando uma mensagem é recebida

@@ -1,95 +1,124 @@
 import React, { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts';
-import {getData} from '../api/data'
+import { getData } from '../api/data'
 
 export default function Grafico(props) {
 
-    const [dataph,setDataph] = useState([])
-    const [dataorp,setDataorp] = useState([])
-    const [dataoxigenio,setDataoxigenio] = useState([])
-    const [datatemperatura,setDatatemperatura] = useState([])
-    const [datacondutividade,setDatacondutividade] = useState([])
-    const [dataturbidez_l,setDataturbidez_l] = useState([])
-    const [dataturbidez_h,setDataturbidez_h] = useState([])
-    const [dataenergia_c,setDataenergia_c] = useState([])
-    const [dataenergia_t_s,setDataenergia_t_s] = useState([])
-    const [dataenergia_t_b,setDataenergia_t_b] = useState([])
-    const [datapotencia,setDatapotencia] = useState([])
-    
+    const [dataph, setDataph] = useState([])
+    const [dataorp, setDataorp] = useState([])
+    const [dataoxigenio, setDataoxigenio] = useState([])
+    const [datatemperatura, setDatatemperatura] = useState([])
+    const [datasalinidade, setDatasalinidade] = useState([])
+    const [datacondutividade, setDatacondutividade] = useState([])
+    const [datatotalsolidos, setDatatotalsolidos] = useState([])
+    const [datagravidade, setDatagravidade] = useState([])
+    const [dataturbidez_l, setDataturbidez_l] = useState([])
+    const [dataturbidez_h, setDataturbidez_h] = useState([])
+    const [dataenergia_ishunt, setDataenergia_ishunt] = useState([])
+    const [dataenergia_vshunt, setDataenergia_vshunt] = useState([])
+    const [dataenergia_vbus, setDataenergia_vbus] = useState([])
+    const [dataenergia_watts, setDataenergia_watts] = useState([])
 
-    useEffect(()=>{
-        getData('ph').then(response=>{
+    const [timer ,settimer] = useState([false])
+
+    setInterval(()=>{
+        settimer((old)=>{
+            return !old
+        })
+    },30000)
+
+
+    useEffect(() => {
+        getData('ph').then(response => {
             setDataph(prepareData(response))
             console.log(response);
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('orp').then(response=>{
+        getData('orp').then(response => {
             setDataorp(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('oxigenio').then(response=>{
+        getData('oxigenio').then(response => {
             console.log(response);
             setDataoxigenio(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('temperatura').then(response=>{
+        getData('temperatura').then(response => {
             setDatatemperatura(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('condutividade').then(response=>{
+        getData('salinidade').then(response => {
+            setDatasalinidade(prepareData(response))
+        }).catch(error => {
+            console.log(error);
+        })
+
+        getData('condutividade').then(response => {
             setDatacondutividade(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('turbidez_l').then(response=>{
+        getData('total_solidos_dissolvidos').then(response => {
+            setDatatotalsolidos(prepareData(response))
+        }).catch(error => {
+            console.log(error);
+        })
+
+        getData('gravidade').then(response => {
+            setDatagravidade(prepareData(response))
+        }).catch(error => {
+            console.log(error);
+        })
+
+        getData('turbidez_l').then(response => {
             setDataturbidez_l(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('turbidez_h').then(response=>{
+        getData('turbidez_h').then(response => {
             setDataturbidez_h(prepareData(response))
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('energia_c').then(response=>{
-            setDataenergia_c(prepareData(response))
-        }).catch(error=>{
+        getData('energia_ishunt').then(response => {
+            setDataenergia_ishunt(prepareData(response))
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('energia_t_s').then(response=>{
-            setDataenergia_t_s(prepareData(response))
-        }).catch(error=>{
+        getData('energia_vshunt').then(response => {
+            setDataenergia_vshunt(prepareData(response))
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('energia_t_b').then(response=>{
-            setDataenergia_t_b(prepareData(response))
-        }).catch(error=>{
+        getData('energia_vbus').then(response => {
+            setDataenergia_vbus(prepareData(response))
+        }).catch(error => {
             console.log(error);
         })
 
-        getData('potencia').then(response=>{
-            setDatapotencia(prepareData(response))
-        }).catch(error=>{
+        getData('energia_watts').then(response => {
+            setDataenergia_watts(prepareData(response))
+        }).catch(error => {
             console.log(error);
         })
-    },[])
+    }, [timer])
 
 
-    function prepareData(datas){
-        const objetc = datas.map((data)=>{
+    function prepareData(datas) {
+        const objetc = datas.map((data) => {
             return {
                 x: new Date(data.date),
                 y: data.value
@@ -98,9 +127,9 @@ export default function Grafico(props) {
             return a.x - b.x;
         });
 
-        return [{data:objetc}]
+        return [{ data: objetc }]
     }
-    
+
 
     class Options {
         constructor(color) {
@@ -112,80 +141,139 @@ export default function Grafico(props) {
             };
             this.colors = [color];
 
-            this.noData= {
+            this.noData = {
                 text: 'Loading...'
             };
+
+            this.yaxis = {
+                labels: {
+                    style: {
+                        colors: '#FFFFFF' // Cor do texto do eixo Y (branco)
+                    }
+                }
+            };
+
+            this.tooltip = {
+                theme: 'dark' // Definindo o tema do tooltip para escuro
+            };
+            
         }
     }
 
     return (
+
         <div>
-            <div>
-                <div id="wrapper">
-                    <h3>PH</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#77CCEE')} series={dataph} type="area" height={400} />
-                        </div>
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>PH (0.1 ~ 14)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#77CCEE')} series={dataph} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>ORP</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#FECC00')} series={dataorp} type="area" height={400} />
-                        </div>
+
+                <div className='chart-wrapper'>
+                    <h3>ORP (mV)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#FECC00')} series={dataorp} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Oxigênio Dissolvido (O.D)</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#FECC00')} series={dataoxigenio} type="area" height={400} />
-                        </div>
+            </div>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Dissolved Oxygen(D.O) (mg/L)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#FECC00')} series={dataoxigenio} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Temepratura</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#77CCEE')} series={datatemperatura} type="area" height={400} />
-                        </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Temperature (ºC)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#77CCEE')} series={datatemperatura} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Condutividade</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#000000')} series={datacondutividade} type="area" height={400} />
-                        </div>
+            </div>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Salinity (PSU/PPT)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#000000')} series={datasalinidade} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Turbidez Baixa</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#95C11F')} series={dataturbidez_l} type="area" height={400} />
-                        </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Conductivity (µS/cm)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#000000')} series={datacondutividade} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Turbidez Alta</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#BA3525')} series={dataturbidez_h} type="area" height={400} />
-                        </div>
+            </div>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Total Dissolved Solids (ppm)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#000000')} series={datatotalsolidos} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Energia (A)</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#207FC2')} series={dataenergia_c} type="area" height={400} />
-                        </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Specific Gravity (1 ~ 1.300)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#000000')} series={datagravidade} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Energia (V)</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#77CCEE')} series={dataenergia_t_s} type="area" height={400} />
-                        </div>
+            </div>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Turbidity (Low Range)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#95C11F')} series={dataturbidez_l} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Energia (AB)</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#77CCEE')} series={dataenergia_t_b} type="area" height={400} />
-                        </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Turbidity (High Range)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#BA3525')} series={dataturbidez_h} type="area" height={400} />
+                    </div>
                 </div>
-                <div id="wrapper">
-                <h3>Energia (P)</h3>
-                        <div id="chart-small">
-                            <ReactApexChart options={new Options('#77CCEE')} series={datapotencia} type="area" height={400} />
-                        </div>
+            </div>
+
+            <hr></hr>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Battery : Shunt Current (A)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#207FC2')} series={dataenergia_ishunt} type="area" height={400} />
+                    </div>
+                </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Battery : Shunt Voltage (V)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#77CCEE')} series={dataenergia_vshunt} type="area" height={400} />
+                    </div>
+                </div>
+            </div>
+
+            <div className='same_line'>
+                <div className='chart-wrapper'>
+                    <h3>Battery : Bus Voltage (V)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#77CCEE')} series={dataenergia_vbus} type="area" height={400} />
+                    </div>
+                </div>
+
+                <div className='chart-wrapper'>
+                    <h3>Battery : Power (W)</h3>
+                    <div className='chart-small'>
+                        <ReactApexChart options={new Options('#77CCEE')} series={dataenergia_watts} type="area" height={400} />
+                    </div>
                 </div>
             </div>
         </div>

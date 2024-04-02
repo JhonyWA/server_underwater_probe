@@ -32,3 +32,29 @@
 #wrapper{
   margin-bottom: 100px;
 }
+
+.same_line {
+  display: flex;
+}
+
+.same_line > div {
+  width: 50%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.chart-small {
+  width: 100%;
+}
+
+hr {
+  border-width: 20px; /* Defina a grossura da linha desejada */
+  margin: 30px;
+}
+
+.apexcharts-xaxis-label {
+  fill: #FFFFFF; /* Cor do texto do eixo X (branco) */
+}
+.apexcharts-menu {
+  background-color: black !important;
+}
