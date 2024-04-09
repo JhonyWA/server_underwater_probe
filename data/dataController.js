@@ -87,11 +87,24 @@ const dataController = {
         }
     },
 
-    getData: async function (req, res) {
+    getALLData: async function (req, res) {
         const type = req.params.type
         // const type = req.body.type
         try {
             const datas = await Data.find({ type })
+            return res.send(datas)
+        } catch (error) {
+            return res.status(400).send(error.message)
+        }
+    },
+
+    getData: async function (req,res){
+        const type = req.params.type
+        const time = req.params.time
+
+        try {
+            const datas = await Data.find({ type, date: { $gt: time }})
+
             return res.send(datas)
         } catch (error) {
             return res.status(400).send(error.message)
